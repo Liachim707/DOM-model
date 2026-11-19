@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Image gallery</title>
+
+    <style>
+      /* Общие стили страницы */
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #ffffff;
+      }
+
+      /* Стили заголовка */
+      h1 {
+        background-color: #3e7130;
+        color: white;
+        font-size: 28px;
+        margin: 0;
+        padding: 6px 8px;
+      }
+
+      /* Стили галереи с помощью Flexbox */
+      .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 6px;
+        padding: 8px;
+      }
+
+      /* Стили изображений */
+      .gallery img {
+        width: calc(50% - 3px);
+        height: 93px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      /* Адаптация для экранов меньше 360px */
+      @media (max-width: 359px) {
+        .gallery img {
+          width: 100%;
+        }
+      }
+
+      /* Контейнер кнопок */
+      .button-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 14px 0 20px;
+      }
+
+      /* Общие стили кнопок */
+      .gallery-button {
+        background-color: #c45b50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 18px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.4s ease, color 0.4s ease;
+      }
+
+      /* Изменение цвета при наведении */
+      .gallery-button:hover:not(:disabled) {
+        background-color: #3e7130;
+        color: white;
+      }
+
+      /* Неактивная кнопка удаления */
+      .gallery-button:disabled {
+        background-color: #cccccc;
+        color: #666666;
+        cursor: not-allowed;
+      }
+
+      /* Стили подписи автора */
+      .author {
+        background-color: black;
+        color: white;
+        padding: 8px 6px;
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Image Gallery</h1>
+
+    <div class="gallery" id="gallery">
+      <img src="https://picsum.photos/240/220?random=1" alt="Image 1" />
+
+      <img src="https://picsum.photos/240/220?random=2" alt="Image 2" />
+
+      <img src="https://picsum.photos/240/220?random=3" alt="Image 3" />
+
+      <img src="https://picsum.photos/240/220?random=4" alt="Image 4" />
+    </div>
+
+    <div class="button-container">
+      <button class="gallery-button" id="new-images" type="button">
+        New images
+      </button>
+
+      <button class="gallery-button" id="add-image" type="button">
+        Add image
+      </button>
+
+      <button class="gallery-button" id="delete-image" type="button">
+        Delete image
+      </button>
+    </div>
+
+    <p class="author">Random image app by <b>Michael</b></p>
+
+    <script>
+      // Получаем элементы страницы
+      const gallery = document.getElementById("gallery");
+      const newImagesButton = document.getElementById("new-images");
+      const addImageButton = document.getElementById("add-image");
+      const deleteImageButton = document.getElementById("delete-image");
+
+      // Создаём адрес случайного изображения
+      function getRandomImageUrl() {
+        return (
+          "https://picsum.photos/240/220?random=" + Date.now() + Math.random()
+        );
+      }
+
+      // Обновляем изображения без перезагрузки страницы
+      newImagesButton.addEventListener("click", function () {
+        const images = gallery.querySelectorAll("img");
+
+        images.forEach(function (image) {
+          image.src = getRandomImageUrl();
+        });
+      });
+
+      // Добавляем новое изображение
+      addImageButton.addEventListener("click", function () {
+        const newImage = document.createElement("img");
+
+        newImage.src = getRandomImageUrl();
+        newImage.alt = "New image";
+
+        gallery.appendChild(newImage);
+
+        updateDeleteButton();
+      });
+
+      // Удаляем последнее изображение
+      deleteImageButton.addEventListener("click", function () {
+        const images = gallery.querySelectorAll("img");
+
+        if (images.length > 1) {
+          images[images.length - 1].remove();
+        }
+
+        updateDeleteButton();
+      });
+
+      // Проверяем, можно ли удалять изображения
+      function updateDeleteButton() {
+        const images = gallery.querySelectorAll("img");
+
+        deleteImageButton.disabled = images.length <= 1;
+      }
+
+      // Проверяем состояние кнопки при запуске страницы
+      updateDeleteButton();
+    </script>
+  </body>
+</html>
